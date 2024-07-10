@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  hash  String
+
+  firstName        String?
+  lastName         String?
+  favoriteCarriers FavoriteCarrier[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Carrier {
+  id          Int               @id @default(autoincrement())
+  name        String
+  description String?
+  favoritedBy FavoriteCarrier[]
+  promotions  Promotion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("carriers")
+}
+
+model FavoriteCarrier {
+  id        Int @id @default(autoincrement())
+  userId    Int
+  carrierId Int
+
+  user    User    @relation(fields: [userId], references: [id])
+  carrier Carrier @relation(fields: [carrierId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, carrierId])
+  @@map("favorite_carriers")
+}
+
+model Promotion {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  discount    Float
+  startDate   DateTime
+  endDate     DateTime
+  carrierId   Int
+
+  carrier Carrier @relation(fields: [carrierId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("promotions")
+}
