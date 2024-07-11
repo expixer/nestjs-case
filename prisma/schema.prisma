@@ -22,6 +22,9 @@ model User {
   lastName         String?
   favoriteCarriers FavoriteCarrier[]
 
+  userRoles      UserRole[]
+  UserPromotions UserPromotion[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -62,12 +65,42 @@ model Promotion {
   discount    Float
   startDate   DateTime
   endDate     DateTime
+  isActive    Boolean  @default(true)
   carrierId   Int
 
-  carrier Carrier @relation(fields: [carrierId], references: [id])
+  userPromotions UserPromotion[]
+  carrier        Carrier         @relation(fields: [carrierId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("promotions")
+}
+
+model UserPromotion {
+  id          Int @id @default(autoincrement())
+  userId      Int
+  promotionId Int
+
+  user      User      @relation(fields: [userId], references: [id])
+  promotion Promotion @relation(fields: [promotionId], references: [id])
+
+  @@unique([userId, promotionId])
+  @@map("user_promotions")
+}
+
+model UserRole {
+  id     Int      @id @default(autoincrement())
+  userId Int
+  role   EnumRole
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("user_roles")
+}
+
+enum EnumRole {
+  ADMIN
+  CARRIERUSER
+  USER
 }

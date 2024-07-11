@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post, UseGuards } from "@nestjs/common";
 import { JwtGuard } from "../auth/guard";
 import { User } from "../auth/decorator";
 import { FavoriteCarrierService } from "./favorite-carrier.service";
-import { CreateFavoriteCarrierDto } from "./dto";
+import { ActionFavoriteCarrierDto } from "./dto";
 
 @UseGuards(JwtGuard)
 @Controller("favorite-carrier")
@@ -22,8 +22,16 @@ export class FavoriteCarrierController {
   @Post()
   async add(
     @User("id") userId: number,
-    @Body() dto: CreateFavoriteCarrierDto
+    @Body() dto: ActionFavoriteCarrierDto
   ) {
     return this.favoriteCarrierService.addFavoriteCarrier(userId, dto);
+  }
+
+  @Delete()
+  async remove(
+    @User("id") userId: number,
+    @Body() dto: ActionFavoriteCarrierDto
+  ) {
+    return this.favoriteCarrierService.removeFavoriteCarrier(userId, dto);
   }
 }

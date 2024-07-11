@@ -5,6 +5,8 @@ import { AuthModule } from "./auth/auth.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { ConfigModule } from "@nestjs/config";
 import { FavoriteCarrierModule } from './favorite-carrier/favorite-carrier.module';
+import { UserPromotionModule } from './user-promotion/user-promotion.module';
+import { DecoratorModule } from "./decorator/decorator.module";
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { FavoriteCarrierModule } from './favorite-carrier/favorite-carrier.modul
     AuthModule,
     PrismaModule,
     FavoriteCarrierModule,
+    UserPromotionModule,
+    DecoratorModule
   ],
   controllers: [AppController],
   providers: [AppService]

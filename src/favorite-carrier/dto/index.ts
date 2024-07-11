@@ -1,1 +1,1 @@
-export * from './create-favorite-carrier.dto'
+export * from './action-favorite-carrier.dto'

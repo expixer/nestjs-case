@@ -5,6 +5,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { EnumRole } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
@@ -38,15 +39,21 @@ export class AuthService {
     return this.signToken(user.id, user.email);
   }
 
-  async register(dto: AuthDto) {
+  async register(dto: AuthDto, role = EnumRole.USER) {
     const hash = await this.hashPassword(dto.password);
     try {
       const user = await this.prisma.user.create({
         data: {
           email: dto.email,
-          hash
-        }
+          hash,
+          userRoles: {
+            create: {
+              role
+            }
+          }
+        },
       });
+
       return this.signToken(user.id, user.email);
     } catch (error) {
       if (

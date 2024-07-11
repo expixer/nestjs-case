@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from "../prisma/prisma.service";
-import { CreateFavoriteCarrierDto } from "./dto";
+import { ActionFavoriteCarrierDto } from "./dto";
 
 @Injectable()
 export class FavoriteCarrierService {
@@ -16,12 +16,23 @@ export class FavoriteCarrierService {
     });
   }
 
-  async addFavoriteCarrier(userId: number, dto: CreateFavoriteCarrierDto) {
+  async addFavoriteCarrier(userId: number, dto: ActionFavoriteCarrierDto) {
 
     return this.prisma.favoriteCarrier.create({
       data: {
         userId,
         carrierId: dto.carrierId
+      }
+    });
+  }
+
+  removeFavoriteCarrier(userId: number, dto: ActionFavoriteCarrierDto) {
+    return this.prisma.favoriteCarrier.delete({
+      where: {
+        userId_carrierId: {
+          userId,
+          carrierId: dto.carrierId
+        }
       }
     });
   }
